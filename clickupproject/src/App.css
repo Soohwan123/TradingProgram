@@ -1,0 +1,307 @@
+@media (min-width: 960px) {
+  .menu-items {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: auto;
+  }
+
+  .main-div {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    height: auto;
+  }
+
+  .left-card {
+    margin-top: 5vh;
+    width: 15vw;
+    height: 80vh;
+    position: absolute;
+    left: 20;
+    top: 5%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .right-card {
+    margin-top: 5vh;
+    width: 15vw;
+    height: 80vh;
+    position: absolute;
+    right: 20;
+    top: 5%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .main-card {
+    margin-top: 5vh;
+    width: 65vw;
+    height: 80vh;
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    min-width: 350;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  #menubtn {
+    display: none;
+  }
+}
+
+@media (max-width: 959px) {
+  .menu-items {
+    display: none;
+  }
+
+  #menubtn {
+    display: block;
+  }
+  .main-div {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    height: auto;
+  }
+  .left-card {
+    width: 65vw;
+    height: auto;
+    position: relative;
+    margin: 10px 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .right-card {
+    width: 65vw;
+    height: auto;
+    position: relative;
+    margin: 10px 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .main-card {
+    width: 65vw;
+    height: auto;
+    position: relative;
+    margin: 10px 0;
+    transform: translate(-50%, -50%);
+    min-width: 350;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+.bigred {
+  font-family: "Courier New";
+  font-style: italic;
+  font-size: xx-large;
+  color: red;
+}
+
+.labtext {
+  font-weight: bold;
+  color: purple;
+}
+
+body {
+  place-items: unset !important;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+.card {
+  margin-top: 5vh;
+}
+
+.cardBody {
+  text-align: left;
+  color: darkblue;
+  font-weight: bold;
+}
+
+.cardTitle {
+  text-align: center;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+@media only screen and (max-width: 600px) {
+  .card {
+    margin-top: 5vh !important;
+    width: 335px;
+  }
+
+  .cardBody {
+    text-align: left;
+  }
+
+  .cardTitle {
+    text-align: center;
+    font-size: xx-large;
+    font-weight: bold;
+  }
+}
+
+/* #root {
+  width: 329px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+.bigred {
+  font-family: "Courier New";
+  font-style: italic;
+  font-size: xx-large;
+  color: red;
+}
+body {
+  place-items: unset !important;
+}
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+.css-46bh2p-MuiCardContent-root {
+  padding: 0 !important;
+}
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .card {
+    margin-top: 6vh !important;
+    width: "90vw";
+  }
+  .cardHeader {
+    margin-top: -5vh;
+  }
+  .textfield {
+    width: 25vw;
+  }
+}
+@media only screen and (min-width: 768px) {
+  body {
+    font-size: 16px; 
+  }
+
+  .card {
+    width: 50%;
+    margin: 10vh auto;
+    padding: 2em;
+  }
+
+  .textfield {
+    width: 100%;
+  }
+
+  .buttons {
+    background-color: aqua;
+  }
+}
+
+.buttons {
+  background-color: "aqua";
+}
+.card {
+  padding: 2em;
+  margin-top: 15vh;
+}
+.usersList {
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  margin-left: 2vw;
+  box-sizing: border-box;
+  height: calc(50vh);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.userBubble {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: smaller;
+  position: relative;
+  padding: 2vw;
+  width: 50vw;
+  margin-bottom: -1em;
+  border-radius: 10px;
+  left: -3vw;
+  color: white;
+}
+
+.read-the-docs {
+  color: #888;
+}
+.scenario-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 2em;
+}
+.scenario-message {
+  color: white;
+  width: 80%;
+  margin: 2px;
+  padding: 1em;
+  font-weight: bold;
+}
+.css-78trlr-MuiButtonBase-root-MuiIconButton-root {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+ */
