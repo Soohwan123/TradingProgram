@@ -1,160 +1,213 @@
 // userprofile.js
-import React, { useState, useEffect, useReducer } from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Button,
-} from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Avatar, List, ListItem, ListItemAvatar, ListItemText, IconButton } from '@mui/material';
+import { PersonAdd as PersonAddIcon, PersonRemove as PersonRemoveIcon } from '@mui/icons-material';
+import { useAuth } from '../context/AuthContext';
 
 const ProfilePage = () => {
-  const initialState = {
-    following: [],
-    unfollowing: [],
-  };
-  const reducer = (state, newState) => ({ ...state, ...newState });
-  const [state, setState] = useReducer(reducer, initialState);
+  const { user } = useAuth();
+  const [users, setUsers] = useState([]);
+  const [following, setFollowing] = useState([]);
 
-  const [newComment, setNewComment] = useState("");
+  const fetchUsers = async () => {
+    if (!user) return;
+    
+    try {
+      const response = await fetch('http://localhost:5000/graphql', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `
+            query {
+              users {
+                id
+                email
+              }
+              currentUser: user(email: "${user.email}") {
+                following {
+                  account
+                }
+              }
+            }
+          `
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.data) {
+        const followingList = data.data.currentUser?.following?.map(f => f.account) || [];
+        setFollowing(followingList);
+        
+        const otherUsers = data.data.users.filter(u => u.email !== user.email);
+        setUsers(otherUsers);
+      }
+    } catch (error) {
+      console.error('Error fetching users and following:', error);
+    }
+  };
 
   useEffect(() => {
-    fetchStates();
-  }, []);
+    if (user) {
+      fetchUsers();
+    }
+  }, [user]);
 
-  const fetchStates = async () => {
+  const handleFollow = async (accountToFollow) => {
     try {
-      let response = await fetch("http://localhost:5000/graphql", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
+      setFollowing(prev => [...prev, accountToFollow]);
+
+      const response = await fetch('http://localhost:5000/graphql', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          query: "query{ users { email, password, following {account}}}",
+          query: `
+            mutation {
+              addFollowing(email: "${user.email}", account: "${accountToFollow}") {
+                id
+                email
+                following {
+                  account
+                }
+              }
+            }
+          `
         }),
       });
-      let json = await response.json();
-      const currentUser = json.data.users.find(
-        (user) => user.email === localStorage.getItem("userEmail")
-      );
-      const tempFollowing = [];
-      const tempUnfollowing = [];
-      json.data.users.forEach((user) => {
-        const isFollowing = currentUser.following.some(
-          (followedUser) => followedUser.account === user.email
-        );
-
-        if (isFollowing) {
-          tempFollowing.push(user.email);
-        } else {
-          tempUnfollowing.push(user.email);
-        }
-        setState({ following: tempFollowing, unfollowing: tempUnfollowing });
-      });
+      const data = await response.json();
+      if (data.data) {
+        const updatedFollowing = data.data.addFollowing.following.map(f => f.account);
+        setFollowing(updatedFollowing);
+      }
     } catch (error) {
-      console.log(error);
+      console.error('Error following user:', error);
+      setFollowing(prev => prev.filter(email => email !== accountToFollow));
     }
   };
 
-  const onButtonFollow = async (account) => {
+  const handleUnfollow = async (accountToUnfollow) => {
     try {
-      let response = await fetch("http://localhost:5000/graphql", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
+      setFollowing(prev => prev.filter(email => email !== accountToUnfollow));
+
+      const response = await fetch('http://localhost:5000/graphql', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          query:
-            "mutation($email: String, $account: String) {addfollowing(email: $email, account: $account)}",
-          variables: {
-            email: localStorage.getItem("userEmail"),
-            account: account,
-          },
+          query: `
+            mutation {
+              removeFollowing(email: "${user.email}", account: "${accountToUnfollow}") {
+                id
+                email
+                following {
+                  account
+                }
+              }
+            }
+          `
         }),
       });
-      fetchStates();
+      const data = await response.json();
+      if (data.data) {
+        const updatedFollowing = data.data.removeFollowing.following.map(f => f.account);
+        setFollowing(updatedFollowing);
+      }
     } catch (error) {
-      console.log(error);
-    }
-  };
-  const onButtonUnfollow = async (account) => {
-    try {
-      let response = await fetch("http://localhost:5000/graphql", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
-        body: JSON.stringify({
-          query:
-            "query($email: String, $account: String) {deletefollowing(email: $email, account: $account)}",
-          variables: {
-            email: localStorage.getItem("userEmail"),
-            account: account,
-          },
-        }),
-      });
-      fetchStates();
-    } catch (error) {
-      console.log(error);
+      console.error('Error unfollowing user:', error);
+      setFollowing(prev => [...prev, accountToUnfollow]);
     }
   };
 
   return (
-    <div style={{ width: "20vh" }}>
-      <Card>
-        <CardContent>
-          <Typography variant="h6">Profile</Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            {localStorage.getItem("userEmail")}
-          </Typography>
-          <Divider style={{ margin: "15px 0" }} />
-          <List>
-            {state.following.map((item) => (
-              <div key={item.id}>
-                <ListItem>
-                  <ListItemText
-                    secondary={
-                      <Typography variant="caption">{item}</Typography>
-                    }
-                  />
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => onButtonUnfollow(item)}
-                  >
-                    Unfollow
-                  </Button>
-                </ListItem>
-              </div>
-            ))}
-          </List>
-          <Divider style={{ margin: "15px 0" }} />
-          <List>
-            {state.unfollowing.map((item) => (
-              <div key={item.id}>
-                <ListItem>
-                  <ListItemText
-                    secondary={
-                      <Typography variant="caption">{item}</Typography>
-                    }
-                  />
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => onButtonFollow(item)}
-                  >
-                    Follow
-                  </Button>
-                </ListItem>
-              </div>
-            ))}
-          </List>
-        </CardContent>
-      </Card>
-    </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+        <Avatar sx={{ width: 60, height: 60, bgcolor: '#2196f3' }}>
+          {user?.email?.charAt(0).toUpperCase()}
+        </Avatar>
+        <Typography variant="h6" color="primary">
+          {user?.email || 'Not logged in'}
+        </Typography>
+      </Box>
+
+      <List sx={{ width: '100%' }}>
+        {users.map((otherUser) => {
+          const isFollowing = following.includes(otherUser.email);
+          
+          return (
+            <ListItem
+              key={otherUser.id}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+              }}
+            >
+              {isFollowing ? (
+                <IconButton 
+                  onClick={() => handleUnfollow(otherUser.email)}
+                  sx={{ 
+                    color: 'white',
+                    bgcolor: 'error.main',
+                    '&:hover': {
+                      bgcolor: 'error.dark',
+                    },
+                    width: 35,
+                    height: 35,
+                    borderRadius: '50%',
+                    minWidth: 35,
+                    ml: -4
+                  }}
+                >
+                  <PersonRemoveIcon fontSize="small" />
+                </IconButton>
+              ) : (
+                <IconButton 
+                  onClick={() => handleFollow(otherUser.email)}
+                  sx={{ 
+                    color: 'primary.main',
+                    width: 35,
+                    height: 35,
+                    ml: -4
+                  }}
+                >
+                  <PersonAddIcon />
+                </IconButton>
+              )}
+
+              <ListItemAvatar>
+                <Avatar sx={{ bgcolor: '#2196f3' }}>
+                  {otherUser.email.charAt(0).toUpperCase()}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText 
+                primary={otherUser.email}
+                secondary={isFollowing ? 'Following' : ''}
+                sx={{ 
+                  ml: -2,
+                  '& .MuiListItemText-primary': {
+                    color: isFollowing ? 'success.main' : 'inherit'
+                  },
+                  '& .MuiListItemText-secondary': {
+                    color: isFollowing ? 'success.light' : 'text.secondary'
+                  }
+                }}
+              />
+            </ListItem>
+          );
+        })}
+      </List>
+
+      <Box sx={{ width: '100%', mt: 2 }}>
+        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
+          Account Info
+        </Typography>
+        <Typography variant="body2">
+          Email: {user?.email}
+        </Typography>
+        <Typography variant="body2">
+          Member since: {user?.id ? new Date(parseInt(user.id.substring(0, 8), 16) * 1000).toLocaleDateString() : 'N/A'}
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 

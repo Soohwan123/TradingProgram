@@ -1,11 +1,66 @@
-import MainComponent from "./clickup/maincomponent";
+import { Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import Login from './clickup/login';
+import Register from './clickup/register';
+import StockMarketCharts from './clickup/stockmarketcharts';
+import DiscussionPage from './clickup/discussionboard';
+import NavBar from './components/NavBar';
+import { Box } from '@mui/material';
+import BitcoinMarketCharts from './clickup/bitcoinmarketcharts';
+import { AuthProvider } from './context/AuthContext';
+import GoldMarketCharts from './clickup/goldmarketcharts';
+
 function App() {
+  const [msg, setMsg] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 로그인 상태에 따라 다른 레이아웃 보여주기
+  const AuthenticatedLayout = ({ children }) => (
+    <Box>
+      <NavBar />
+      {children}
+    </Box>
+  );
+
   return (
-    <div>
-      <MainComponent />
-    </div>
+    <AuthProvider>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Login setMsg={setMsg} setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/register" element={<Register setMsg={setMsg} />} />
+
+        {/* Protected routes */}
+        <Route path="/marketcharts" element={
+          <AuthenticatedLayout>
+            <StockMarketCharts />
+          </AuthenticatedLayout>
+        } />
+        <Route path="/crypto" element={
+          <AuthenticatedLayout>
+            <BitcoinMarketCharts />
+          </AuthenticatedLayout>
+        } />
+        <Route path="/discussions" element={
+          <AuthenticatedLayout>
+            <DiscussionPage />
+          </AuthenticatedLayout>
+        } />
+        <Route path="/profile" element={
+          <AuthenticatedLayout>
+            <DiscussionPage />
+          </AuthenticatedLayout>
+        } />
+        <Route path="/gold" element={
+          <AuthenticatedLayout>
+            <GoldMarketCharts />
+          </AuthenticatedLayout>
+        } />
+  
+      </Routes>
+    </AuthProvider>
   );
 }
+
 export default App;
 
 /* import React from "react";

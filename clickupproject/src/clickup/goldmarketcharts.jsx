@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart, LineStyle } from 'lightweight-charts';
-import { ThemeProvider, Container, Grid, Typography, CircularProgress, Box, TextField, Button } from '@mui/material';
+import { Container, Grid, Typography, CircularProgress, Box, TextField, Button } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { styled } from '@mui/material/styles';
-import theme from '../theme';
 import axios from 'axios';
+import stockBackground from '../assets/stock-background.jpg';
 
-const BitcoinMarketCharts = () => {
+const GoldMarketCharts = () => {
   const chartContainerRef = useRef();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +20,7 @@ const BitcoinMarketCharts = () => {
     const fetchHistoricalData = async () => {
       try {
         const response = await axios.get(
-          'https://min-api.cryptocompare.com/data/v2/histohour?fsym=BTC&tsym=USD&limit=2000&toTs=-1&api_key=05bde4f591713196c1ddb739ed58ce648b1be4869278e315286711285e80ad1b'
+          'https://min-api.cryptocompare.com/data/v2/histohour?fsym=GOLD&tsym=USD&limit=2000&toTs=-1&api_key=05bde4f591713196c1ddb739ed58ce648b1be4869278e315286711285e80ad1b'
         );
         
         const formattedData = response.data.Data.Data.map(d => ({
@@ -64,7 +63,7 @@ const BitcoinMarketCharts = () => {
 
     const priceLine = {
       price: price,
-      color: '#1a237e',
+      color: '#2962FF',
       lineWidth: 2,
       lineStyle: LineStyle.Dashed,
       axisLabelVisible: true,
@@ -101,7 +100,6 @@ const BitcoinMarketCharts = () => {
       layout: {
         background: { color: '#ffffff' },
         textColor: '#333',
-        padding: { left: 10, right: 10, top: 10, bottom: 10 }
       },
       grid: {
         vertLines: { color: '#f0f0f0' },
@@ -112,16 +110,12 @@ const BitcoinMarketCharts = () => {
       },
       rightPriceScale: {
         borderColor: '#f0f0f0',
-        scaleMargins: {
-          top: 0.1,
-          bottom: 0.1,
-        },
       },
       timeScale: {
         borderColor: '#f0f0f0',
         timeVisible: true,
         secondsVisible: false,
-        barSpacing: 15,
+        barSpacing: 10,  // 캔들 간격 조정
       },
     });
 
@@ -155,70 +149,38 @@ const BitcoinMarketCharts = () => {
   }, [chartData]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container 
-        maxWidth={false} 
-        style={{ 
-          margin: 0,
-          padding: 0,
-          width: '100vw',
-          height: '100vh',
-          maxWidth: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundImage: 'url(/src/assets/stock-background.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-          overflow: 'hidden',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0
-        }}
-      >
-        <Grid container spacing={0} style={{ 
-          width: '90%', 
-          height: '90%',
-          backgroundColor: 'transparent',
-          borderRadius: '10px',
-          padding: '20px'
-        }}>
+    <div style={{ 
+      width: '100vw', 
+      height: '100vh', 
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      backgroundImage: `url(${stockBackground})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      overflow: 'hidden'
+    }}>
+      <Container maxWidth={false} sx={{ pt: 10, height: '100%' }}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h5" gutterBottom style={{ 
-              margin: '10px', 
-              color: '#ffffff',
-              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
-            }}>
-              Bitcoin Price Chart
+            <Typography variant="h5" sx={{ color: 'white', mb: 2 }}>
+              Gold Market Chart
             </Typography>
-            <Box sx={{ 
-              display: 'flex', 
-              gap: 2, 
-              mb: 2, 
-              alignItems: 'center',
-              '& .MuiTextField-root': {
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '4px'
-              }
-            }}>
+            <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
               <TextField
                 label="목표가 설정"
                 value={targetPrice}
                 onChange={(e) => setTargetPrice(e.target.value)}
                 type="number"
                 size="small"
-                sx={{
+                sx={{ 
+                  bgcolor: 'white',
+                  borderRadius: 1,
                   '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
-                      borderColor: '#1a237e',
+                      borderColor: '#2962FF',
                     },
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#1a237e',
                   },
                 }}
               />
@@ -231,32 +193,30 @@ const BitcoinMarketCharts = () => {
               </Button>
             </Box>
             {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
                 <CircularProgress />
               </Box>
             ) : error ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
                 <Typography color="error">{error}</Typography>
               </Box>
             ) : (
-              <div
-                ref={chartContainerRef} 
-                style={{
-                  width: '100%',
-                  height: '70vh',
-                  position: 'relative',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  borderRadius: '10px',
-                  padding: '10px'
-                }}
-              />
+              <Box sx={{ 
+                height: '60vh', 
+                bgcolor: 'white',
+                borderRadius: 2,
+                p: 2,
+                boxShadow: 3
+              }}>
+                <div ref={chartContainerRef} style={{ width: '100%', height: '100%' }} />
+              </Box>
             )}
           </Grid>
         </Grid>
       </Container>
       <ToastContainer position="top-right" />
-    </ThemeProvider>
+    </div>
   );
 };
 
-export default BitcoinMarketCharts;
+export default GoldMarketCharts;

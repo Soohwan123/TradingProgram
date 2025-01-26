@@ -1,0 +1,70 @@
+# 쿼리 타입 정의 (데이터 조회)
+type Query {
+    # 사용자 관련 쿼리
+    users: [User]                          # 모든 사용자 조회
+    user(email: String!): User             # 특정 사용자 조회
+    
+    # 토론 관련 쿼리
+    discussions: [Discussion]              # 모든 토론 조회
+    discussionsByAuthor(author: String!): [Discussion]  # 작성자별 토론 조회
+    
+    # 주식 데이터 관련 쿼리
+    stockData(symbol: String!): StockData  # 특정 심볼의 주식 데이터 조회
+    stocksAbovePrice(price: Float!): [StockData]  # 특정 가격 이상의 주식들 조회
+}
+
+# 뮤테이션 타입 정의 (데이터 생성/수정/삭제)
+type Mutation {
+    # 사용자 관련 뮤테이션
+    addUser(email: String!, password: String!): User
+    login(email: String!, password: String!): User
+    addFollowing(email: String!, account: String!): User
+    
+    # 토론 관련 뮤테이션
+    addDiscussion(opinion: String!, date: String!, author: String!): Discussion
+    updateDiscussion(id: ID!, opinion: String!): Discussion
+    
+    # 주식 데이터 관련 뮤테이션
+    updateStockData(symbol: String!, currentPrice: Float!): StockData
+
+    # 디스커션 삭제
+    deleteDiscussion(id: ID!): Discussion
+
+    # 팔로잉 제거
+    removeFollowing(email: String!, account: String!): User
+}
+
+# 사용자 타입 정의
+type User {
+    id: ID!
+    email: String!
+    password: String!
+    following: [Following]
+}
+
+# 팔로잉 타입 정의
+type Following {
+    account: String!
+}
+
+# 토론 타입 정의
+type Discussion {
+    id: ID!
+    opinion: String!
+    date: String!
+    author: String!
+}
+
+# 주식 데이터 타입 정의
+type StockData {
+    id: ID!
+    symbol: String!
+    timestamp: [Float]
+    indicators: [Float]
+    currentPrice: Float
+}
+
+# 입력 타입 정의
+input FollowingInput {
+    account: String!
+}
