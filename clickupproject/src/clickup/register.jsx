@@ -81,10 +81,10 @@ const Register = ({ setMsg }) => {
         }}
       >
         <Typography variant="h4" align="center" gutterBottom>
-          Create Account
+          새 계정 만들기
         </Typography>
         <TextField
-          label="Email"
+          label="이메일"
           value={userEmail}
           onChange={(e) => setUserEmail(e.target.value)}
           fullWidth
@@ -92,7 +92,7 @@ const Register = ({ setMsg }) => {
         />
         <TextField
           type="password"
-          label="Password"
+          label="암호"
           value={userPassword}
           onChange={(e) => setUserPassword(e.target.value)}
           fullWidth
@@ -100,20 +100,31 @@ const Register = ({ setMsg }) => {
         />
         <Button
           variant="contained"
-          color="primary"
           onClick={onButtonRegister}
           fullWidth
-          sx={{ mt: 2 }}
+          sx={{ 
+            mt: 2,
+            bgcolor: '#000000',
+            '&:hover': {
+              bgcolor: '#333333',
+            }
+          }}
         >
-          Register
+          계정 생성
         </Button>
         <Button
           variant="text"
           onClick={() => navigate("/")}
           fullWidth
-          sx={{ mt: 1 }}
+          sx={{ 
+            mt: 1,
+            color: '#000000',
+            '&:hover': {
+              color: '#333333'
+            }
+          }}
         >
-          Back to Login
+          로그인창으로 돌아가기
         </Button>
       </Box>
     </Container>

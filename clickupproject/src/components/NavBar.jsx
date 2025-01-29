@@ -13,6 +13,7 @@ import ForumIcon from '@mui/icons-material/Forum';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import TimelineIcon from '@mui/icons-material/Timeline';
 import { useAuth } from '../context/AuthContext';
 
 const NavBar = () => {
@@ -30,24 +31,28 @@ const NavBar = () => {
         width: '100%',
         top: 0,
         left: 0,
-        zIndex: 1100
+        zIndex: 1100,
+        backgroundColor: '#000000'
       }}
     >
       <Container maxWidth={false}>  {/* maxWidth={false}로 변경하여 전체 너비 사용 */}
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ 
-              flexGrow: 0, 
-              display: { xs: 'none', md: 'flex' }, 
-              mr: 4,
-              whiteSpace: 'nowrap'
-            }}
-          >
-            ViewChart
-          </Typography>
+          <Box sx={{ 
+            flexGrow: 0, 
+            display: { xs: 'none', md: 'flex' }, 
+            alignItems: 'center',
+            mr: 4,
+          }}>
+            <TimelineIcon sx={{ mr: 1, fontSize: 30 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ whiteSpace: 'nowrap' }}
+            >
+              ViewChart
+            </Typography>
+          </Box>
 
           <Box sx={{ 
             flexGrow: 1, 

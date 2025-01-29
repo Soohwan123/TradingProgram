@@ -16,7 +16,7 @@ const Login = () => {
   const reducer = (state, newState) => ({ ...state, ...newState });
   const [state, setState] = useReducer(reducer, initialState);
 
-  const [msg, setMsg] = useState("Welcome");
+  const [msg, setMsg] = useState("환영합니다");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const navigate = useNavigate();
@@ -153,13 +153,13 @@ const Login = () => {
         }}
       >
         <Typography variant="h4" align="center" gutterBottom>
-          Welcome Back
+          로그인
         </Typography>
         <Typography variant="body1" align="center" color="textSecondary" gutterBottom>
           {msg}
         </Typography>
         <TextField
-          label="Email"
+          label="이메일"
           value={userEmail}
           onChange={(e) => setUserEmail(e.target.value)}
           fullWidth
@@ -167,7 +167,7 @@ const Login = () => {
         />
         <TextField
           type="password"
-          label="Password"
+          label="암호"
           value={userPassword}
           onChange={(e) => setUserPassword(e.target.value)}
           fullWidth
@@ -178,17 +178,29 @@ const Login = () => {
           color="primary"
           onClick={handleSubmit}
           fullWidth
-          sx={{ mt: 2 }}
+          sx={{ 
+            mt: 2,
+            bgcolor: '#000000',
+            '&:hover': {
+              bgcolor: '#333333',
+            }
+          }}
         >
-          Login
+          로그인
         </Button>
         <Button
           variant="text"
           onClick={() => navigate("/register")}
           fullWidth
-          sx={{ mt: 1 }}
+          sx={{ 
+            mt: 1,
+            color: '#000000',
+            '&:hover': {
+              color: '#333333'
+            }
+          }}
         >
-          Create New Account
+          새 계정 만들기
         </Button>
       </Box>
     </Container>

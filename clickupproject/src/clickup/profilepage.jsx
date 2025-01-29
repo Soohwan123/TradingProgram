@@ -120,7 +120,7 @@ const ProfilePage = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-        <Avatar sx={{ width: 60, height: 60, bgcolor: '#2196f3' }}>
+        <Avatar sx={{ width: 60, height: 60, bgcolor: '#000000' }}>
           {user?.email?.charAt(0).toUpperCase()}
         </Avatar>
         <Typography variant="h6" color="primary">
@@ -174,7 +174,7 @@ const ProfilePage = () => {
               )}
 
               <ListItemAvatar>
-                <Avatar sx={{ bgcolor: '#2196f3' }}>
+                <Avatar sx={{ bgcolor: '#000000' }}>
                   {otherUser.email.charAt(0).toUpperCase()}
                 </Avatar>
               </ListItemAvatar>
@@ -198,13 +198,13 @@ const ProfilePage = () => {
 
       <Box sx={{ width: '100%', mt: 2 }}>
         <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-          Account Info
+          계정 정보
         </Typography>
         <Typography variant="body2">
-          Email: {user?.email}
+          이메일: {user?.email}
         </Typography>
         <Typography variant="body2">
-          Member since: {user?.id ? new Date(parseInt(user.id.substring(0, 8), 16) * 1000).toLocaleDateString() : 'N/A'}
+          가입일: {user?.id ? new Date(parseInt(user.id.substring(0, 8), 16) * 1000).toLocaleDateString() : 'N/A'}
         </Typography>
       </Box>
     </Box>

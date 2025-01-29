@@ -129,7 +129,7 @@ const StockMarketCharts = () => {
       width: chartContainerRef.current.clientWidth,
       height: chartContainerRef.current.clientHeight,
       layout: {
-        background: { color: '#ffffff' },
+        background: { color: '#000000' },
         textColor: '#333',
         padding: { left: 10, right: 10, top: 10, bottom: 10 }
       },
@@ -276,7 +276,7 @@ const StockMarketCharts = () => {
                   width: '100%',
                   height: '70vh',
                   position: 'relative',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',  // 차트 영역만 반투명 흰색 배경
+                  backgroundColor: 'rgba(0, 0, 0, 0.9)',  // 차트 영역만 반투명 흰색 배경
                   borderRadius: '10px',
                   padding: '10px'
                 }}

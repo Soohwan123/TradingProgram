@@ -202,7 +202,7 @@ const CommentPage = () => {
           rows={3}
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Write your comment here..."
+          placeholder="댓글을 적으세요"
           variant="outlined"
           sx={{ mb: 1 }}
         />
@@ -213,7 +213,7 @@ const CommentPage = () => {
           disabled={!user || !newComment.trim()}
           fullWidth
         >
-          Submit
+          제출
         </Button>
       </Box>
     </Box>

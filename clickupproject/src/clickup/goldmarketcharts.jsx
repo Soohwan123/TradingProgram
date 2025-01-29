@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart, LineStyle } from 'lightweight-charts';
-import { Container, Grid, Typography, CircularProgress, Box, TextField, Button } from '@mui/material';
+import { ThemeProvider, Container, Grid, Typography, CircularProgress, Box, TextField, Button } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { styled } from '@mui/material/styles';
+import theme from '../theme';
 import axios from 'axios';
-import stockBackground from '../assets/stock-background.jpg';
 
 const GoldMarketCharts = () => {
   const chartContainerRef = useRef();
@@ -22,7 +23,7 @@ const GoldMarketCharts = () => {
         const response = await axios.get(
           'https://min-api.cryptocompare.com/data/v2/histohour?fsym=GOLD&tsym=USD&limit=2000&toTs=-1&api_key=05bde4f591713196c1ddb739ed58ce648b1be4869278e315286711285e80ad1b'
         );
-        
+        console.log("Raw data:", response);
         const formattedData = response.data.Data.Data.map(d => ({
           time: d.time,
           open: d.open,
@@ -33,6 +34,8 @@ const GoldMarketCharts = () => {
         }));
 
         setChartData(formattedData);
+        console.log("formatted data:", formattedData);
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching historical data:', error);
@@ -63,7 +66,7 @@ const GoldMarketCharts = () => {
 
     const priceLine = {
       price: price,
-      color: '#2962FF',
+      color: '#1a237e',
       lineWidth: 2,
       lineStyle: LineStyle.Dashed,
       axisLabelVisible: true,
@@ -98,8 +101,9 @@ const GoldMarketCharts = () => {
       width: chartContainerRef.current.clientWidth,
       height: chartContainerRef.current.clientHeight,
       layout: {
-        background: { color: '#ffffff' },
+        background: { color: '#000000' },
         textColor: '#333',
+        padding: { left: 10, right: 10, top: 10, bottom: 10 }
       },
       grid: {
         vertLines: { color: '#f0f0f0' },
@@ -110,12 +114,16 @@ const GoldMarketCharts = () => {
       },
       rightPriceScale: {
         borderColor: '#f0f0f0',
+        scaleMargins: {
+          top: 0.1,
+          bottom: 0.1,
+        },
       },
       timeScale: {
         borderColor: '#f0f0f0',
         timeVisible: true,
         secondsVisible: false,
-        barSpacing: 10,  // 캔들 간격 조정
+        barSpacing: 15,
       },
     });
 
@@ -149,38 +157,70 @@ const GoldMarketCharts = () => {
   }, [chartData]);
 
   return (
-    <div style={{ 
-      width: '100vw', 
-      height: '100vh', 
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      backgroundImage: `url(${stockBackground})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      overflow: 'hidden'
-    }}>
-      <Container maxWidth={false} sx={{ pt: 10, height: '100%' }}>
-        <Grid container spacing={2}>
+    <ThemeProvider theme={theme}>
+      <Container 
+        maxWidth={false} 
+        style={{ 
+          margin: 0,
+          padding: 0,
+          width: '100vw',
+          height: '100vh',
+          maxWidth: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundImage: 'url(/src/assets/stock-background.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+          overflow: 'hidden',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
+        }}
+      >
+        <Grid container spacing={0} style={{ 
+          width: '90%', 
+          height: '90%',
+          backgroundColor: 'transparent',
+          borderRadius: '10px',
+          padding: '20px'
+        }}>
           <Grid item xs={12}>
-            <Typography variant="h5" sx={{ color: 'white', mb: 2 }}>
-              Gold Market Chart
+            <Typography variant="h5" gutterBottom style={{ 
+              margin: '10px', 
+              color: '#ffffff',
+              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
+            }}>
+              Gold ETF Chart
             </Typography>
-            <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              gap: 2, 
+              mb: 2, 
+              alignItems: 'center',
+              '& .MuiTextField-root': {
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: '4px'
+              }
+            }}>
               <TextField
                 label="목표가 설정"
                 value={targetPrice}
                 onChange={(e) => setTargetPrice(e.target.value)}
                 type="number"
                 size="small"
-                sx={{ 
-                  bgcolor: 'white',
-                  borderRadius: 1,
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
-                      borderColor: '#2962FF',
+                      borderColor: '#1a237e',
                     },
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: '#1a237e',
                   },
                 }}
               />
@@ -193,30 +233,35 @@ const GoldMarketCharts = () => {
               </Button>
             </Box>
             {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
                 <CircularProgress />
               </Box>
             ) : error ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
                 <Typography color="error">{error}</Typography>
               </Box>
             ) : (
-              <Box sx={{ 
-                height: '60vh', 
-                bgcolor: 'white',
-                borderRadius: 2,
-                p: 2,
-                boxShadow: 3
-              }}>
-                <div ref={chartContainerRef} style={{ width: '100%', height: '100%' }} />
-              </Box>
+              <div
+                ref={chartContainerRef} 
+                style={{
+                  width: '100%',
+                  height: '70vh',
+                  position: 'relative',
+                  backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                  borderRadius: '10px',
+                  padding: '10px'
+                }}
+              />
             )}
           </Grid>
         </Grid>
       </Container>
       <ToastContainer position="top-right" />
-    </div>
+    </ThemeProvider>
   );
 };
 
+
 export default GoldMarketCharts;
+
+

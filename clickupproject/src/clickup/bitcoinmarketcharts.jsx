@@ -99,7 +99,7 @@ const BitcoinMarketCharts = () => {
       width: chartContainerRef.current.clientWidth,
       height: chartContainerRef.current.clientHeight,
       layout: {
-        background: { color: '#ffffff' },
+        background: { color: '#000000' },
         textColor: '#333',
         padding: { left: 10, right: 10, top: 10, bottom: 10 }
       },
@@ -245,7 +245,7 @@ const BitcoinMarketCharts = () => {
                   width: '100%',
                   height: '70vh',
                   position: 'relative',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.9)',
                   borderRadius: '10px',
                   padding: '10px'
                 }}
